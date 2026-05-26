@@ -29,7 +29,7 @@ const projects = [
     modelScale: 1.1,
     cameraZ: 5,
     offsetX: 0,
-    offsetY: -1.1,
+    offsetY: -3.1,
     roughness: 1,   // ← add this, closer to 1 = less shiny
     metalness: 0
   },
