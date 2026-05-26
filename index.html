@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Samuel Salvatierra — Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+
+    <!-- Botpress MUST be here, before </body> -->
+    <script src="https://cdn.botpress.cloud/webchat/v2.2/inject.js"></script>
+    <script src="https://files.bpcontent.cloud/2025/01/26/01/20250126011735-53Z8P6QX.js"></script>
+  </body>
+
+<style>
+  /* Botpress responsive fix */
+  #bp-web-widget {
+    bottom: 1rem !important;
+    right: 5rem !important;
+  }
+  @media (max-width: 900px) {
+    #bp-web-widget {
+      bottom: 0.5rem !important;
+      right: 5.5rem !important;
+      transform: scale(0.85) !important;
+      transform-origin: bottom right !important;
+    }
+  }
+</style>
+</html>

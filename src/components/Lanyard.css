@@ -1,0 +1,12 @@
+#hero {
+  min-height: 100dvh;
+  display: grid;
+  grid-template-columns: 1fr 600px;
+  gap: 4rem;
+  align-items: center;
+  padding: 8rem 2rem 4rem;
+  max-width: 1200px; margin: 0 auto;
+  position: relative;
+  z-index: 1;
+  overflow: visible;
+}
