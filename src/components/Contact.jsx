@@ -62,7 +62,7 @@ export default function Contact() {
           </div>
 
           <div className="contact-links reveal reveal-delay-2">
-            {links.map((l) => (
+            {links.map((l) =>  (
               <a
                 key={l.label}
                 className="contact-link"
