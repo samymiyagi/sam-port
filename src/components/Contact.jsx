@@ -21,9 +21,9 @@ const links = [
     ),
   },
   {
-    href: 'https://github.com/SAMUELSALVATIERRA24',
+    href: 'https://github.com/samymiyagi',
     label: 'GitHub',
-    value: 'SAMUELSALVATIERRA24',
+    value: 'samymiyagi',
     target: '_blank',
     icon: (
       <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
