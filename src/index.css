@@ -25,7 +25,7 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 body {
-  background: transparent;
+  background: var(--bg);
   color: var(--text);
   font-family: var(--font);
   overflow-x: hidden;
@@ -46,6 +46,23 @@ body::before {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
   background-repeat: repeat; background-size: 128px; opacity: 0.45;
 }
+
+/* ── Mouse-Follow Glow ───────────────────────────── */
+#mouse-glow {
+  position: fixed; width: 600px; height: 600px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(var(--accent-rgb), 0.06) 0%, transparent 70%);
+  pointer-events: none; z-index: 0;
+  transform: translate(-50%, -50%); transition: opacity 400ms;
+}
+
+/* ── Glow Orbs ───────────────────────────────────── */
+.glow-orb { position: fixed; pointer-events: none; border-radius: 50%; filter: blur(130px); opacity: 0.10; z-index: 0; }
+.glow-orb-1 { width: 700px; height: 700px; top: -250px; right: -150px; background: var(--accent); animation: orbFloat1 30s ease-in-out infinite; }
+.glow-orb-2 { width: 500px; height: 500px; bottom: 5%; left: -150px; background: var(--blue); animation: orbFloat2 38s ease-in-out infinite; }
+.glow-orb-3 { width: 300px; height: 300px; top: 50%; left: 50%; background: var(--accent); opacity: 0.04; animation: orbFloat3 50s ease-in-out infinite; }
+@keyframes orbFloat1 { 0%,100%{transform:translate(0,0)} 33%{transform:translate(-30px,20px)} 66%{transform:translate(20px,-15px)} }
+@keyframes orbFloat2 { 0%,100%{transform:translate(0,0)} 33%{transform:translate(20px,-30px)} 66%{transform:translate(-15px,20px)} }
+@keyframes orbFloat3 { 0%,100%{transform:translate(-50%,-50%)} 50%{transform:translate(-54%,-46%)} }
 
 /* ── Layout ──────────────────────────────────────── */
 .wrap { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
@@ -100,6 +117,14 @@ nav .inner { display: flex; align-items: center; justify-content: space-between;
   max-width: 1200px; margin: 0 auto;
   position: relative; z-index: 1;
   overflow: visible;
+}
+.hero-grid {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(var(--accent-rgb),0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(var(--accent-rgb),0.025) 1px, transparent 1px);
+  background-size: 80px 80px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%);
 }
 .hero-eyebrow {
   font-family: var(--mono); font-size: 0.76rem;
@@ -199,8 +224,13 @@ section { padding: 7rem 0; }
 /* ── Projects ────────────────────────────────────── */
 #projects { padding: 7rem 0; }
 .projects-header { margin-bottom: 3.5rem; }
-.projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.25rem; }
+.projects-grid {
+  columns: 3;
+  column-gap: 1.25rem;
+}
 .project-card {
+  break-inside: avoid;
+  margin-bottom: 1.25rem;
   position: relative; background: var(--surface); border: 1px solid var(--border);
   border-radius: 18px; overflow: hidden;
   transition: border-color 250ms var(--ease-out), transform 300ms var(--ease-out), box-shadow 300ms;
@@ -224,7 +254,7 @@ section { padding: 7rem 0; }
 .project-tag { font-family: var(--mono); font-size: 0.66rem; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.4rem; }
 .project-title { font-size: 1.05rem; font-weight: 700; color: var(--text); margin-bottom: 0.35rem; }
 .project-desc { font-size: 0.84rem; color: var(--text-muted); line-height: 1.65; }
-.project-card.featured { grid-column: span 2; }
+.project-card.featured { column-span: all; margin-bottom: 1.25rem; }
 .project-card.featured .project-media { height: 320px; }
 
 /* ── 3D Model Cards ──────────────────────────────── */
@@ -234,8 +264,13 @@ section { padding: 7rem 0; }
   position: relative;
   background: radial-gradient(ellipse at 50% 60%, rgba(var(--accent-rgb), 0.06) 0%, transparent 70%);
 }
-.project-card.model-card:hover { transform: none; }
-.project-card.model-card { cursor: default; }
+.project-card.model-card {
+  cursor: default;
+  transform: translateZ(0);      /* force GPU layer, stops canvas bleeding */
+  isolation: isolate;            /* creates new stacking context */
+  -webkit-mask-image: -webkit-radial-gradient(white, black); /* Safari border-radius clip fix */
+}
+.project-card.model-card:hover { transform: translateZ(0); } /* override the lift so it doesn't break the GPU layer */
 
 /* ── Skills ──────────────────────────────────────── */
 #skills { padding: 7rem 0; }
@@ -335,6 +370,7 @@ footer { border-top: 1px solid var(--border); padding: 2rem; display: flex; alig
   #cursor-dot, #cursor-ring { display: none; }
   .eyebrow-br { display: inline; }
 
+  /* ── Fix: make nav fixed so it doesn't push hero down ── */
   nav {
     position: fixed;
     top: 0; left: 0; right: 0;
@@ -345,6 +381,7 @@ footer { border-top: 1px solid var(--border); padding: 2rem; display: flex; alig
     width: 100%;
   }
 
+  /* ── Hero starts right below fixed nav ── */
   #hero {
     display: flex;
     flex-direction: column;
@@ -372,6 +409,7 @@ footer { border-top: 1px solid var(--border); padding: 2rem; display: flex; alig
   }
   .lanyard-container { display: none; }
 
+  /* ── Hero content positions ── */
   .hero-eyebrow { margin-top: 0; margin-left: 0; }
   .hero-name { margin-top: 0; margin-left: 0; }
   .hero-role-wrap { margin-top: 10px; margin-left: 0; }
@@ -386,9 +424,10 @@ footer { border-top: 1px solid var(--border); padding: 2rem; display: flex; alig
   }
   .hero-cta { margin-top: 20px; margin-left: 0; }
 
+  /* ── Other sections ── */
   .about-grid, .contact-inner { grid-template-columns: 1fr; gap: 3rem; }
-  .projects-grid { grid-template-columns: 1fr; }
-  .project-card.featured { grid-column: span 1; }
+  .projects-grid { columns: 1; }
+  .project-card.featured { column-span: all; }
   .project-card.featured .project-media { height: 220px; }
   nav .nav-links { display: none; }
   .skills-grid { grid-template-columns: repeat(2, 1fr); }
@@ -417,3 +456,33 @@ footer { border-top: 1px solid var(--border); padding: 2rem; display: flex; alig
 #typewriter-cursor { animation: blink 2.5s step-end infinite !important; }
 @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
 .marquee-track { animation: marquee 200s linear infinite !important; }
+/* ── Clickable project cards ─────────────────────── */
+a.project-card { display: block; text-decoration: none; color: inherit; }
+a.project-card:hover { border-color: rgba(var(--accent-rgb), 0.35); }
+.project-body-link { display: block; text-decoration: none; color: inherit; padding: 1.3rem; position: relative; z-index: 2; }
+.project-body-link:hover .project-title { color: var(--accent); }
+.project-link-icon {
+  display: inline-block;
+  margin-left: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--accent);
+  opacity: 0;
+  transform: translate(-4px, 4px);
+  transition: opacity 200ms var(--ease-out), transform 200ms var(--ease-out);
+}
+.project-card:hover .project-link-icon,
+.project-body-link:hover .project-link-icon { opacity: 1; transform: translate(0, 0); }
+
+/* ── Portrait card ───────────────────────────────── */
+.project-card.portrait .project-media { height: 380px; object-fit: cover; object-position: center top; }
+
+/* ── 3D Model card z-fix ─────────────────────────── */
+.project-card.model-card {
+  cursor: default;
+  transform: translateZ(0);
+  isolation: isolate;
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
+}
+.project-card.model-card:hover { transform: translateZ(0); }
+
+.project-card.portrait .project-media { height: 680px; object-fit: cover; object-position: center top; }
