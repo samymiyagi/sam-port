@@ -5,6 +5,7 @@ import gameVid from '../assets/gamevid.mp4';
 import fittechImg from '../assets/fittech.png';
 import calcuImg from '../assets/CALCU.png';
 import snakeImg from '../assets/SNAKE.png';
+import ivoryImg from '../assets/ivory.jpg';
 import ModelViewer from './ModelViewer';
 import terrariumGLB from '../assets/smol_ame_in_an_upcycled_terrarium_hololiveen.glb';
 
@@ -29,9 +30,10 @@ const projects = [
     modelScale: 1.1,
     cameraZ: 5,
     offsetX: 0,
-    offsetY: -3.1,
-    roughness: 1,   // ← add this, closer to 1 = less shiny
-    metalness: 0
+    offsetY: -1.5,
+    roughness: 1,
+    metalness: 0,
+    link: 'https://sketchfab.com/3d-models/smol-ame-in-an-upcycled-terrarium-hololiveen-490cecc249d242188fda5ad3160a4b24',
   },
   {
     id: 'fittech',
@@ -41,6 +43,18 @@ const projects = [
     type: 'img',
     src: fittechImg,
     alt: 'Fittech gym management system screenshot',
+    link: 'https://fittech.space/',
+  },
+  {
+    id: 'ivory',
+    tag: 'React Native · Supabase · Mobile Dev ',
+    title: 'Ivory Tinda And Earn',
+    desc: 'Ivory is a mobile app for small food businesses like bakeries, food carts, and vendors. It tracks production, sales, inventory, and automatically calculates costs and profits. It includes low-stock alerts, product templates, batch tracking, sales reports, restocking, and CSV/Excel exports. Built with React Native, Expo, and Supabase for real-time data syncing.',
+    type: 'img',
+    portrait: true,
+    src: ivoryImg,
+    alt: 'Ivory project',
+     link: 'https://expo.dev/accounts/samyboiryota/projects/ivory-app/builds/67a6c4ab-f472-4c8d-8c04-56eed1d84b2b',
   },
   {
     id: 'calculator',
@@ -68,6 +82,7 @@ const projects = [
     type: 'img',
     src: unityImg,
     alt: 'Horror game in Unity screenshot',
+    link: 'https://samyyboii.itch.io/wrong-wake',
   },
 ];
 
@@ -94,45 +109,101 @@ export default function Projects() {
         </div>
 
         <div className="projects-grid">
-          {projects.map((p, i) => (
-            <div
-              key={p.id + i}
-              className={`project-card reveal${p.featured ? ' featured' : ''}${p.type === 'model' ? ' model-card' : ''}${
-                i % 3 === 1 ? ' reveal-delay-1' : i % 3 === 2 ? ' reveal-delay-2' : ''
-              }`}
-            >
-              <div className={`project-media-wrap${p.type === 'model' ? ' model-media-wrap' : ''}`}>
-                {p.type === 'video' ? (
-                  <video
-                    className="project-media"
-                    autoPlay muted loop playsInline
-                    src={p.src}
-                    aria-label={p.alt}
-                  />
-                ) : p.type === 'model' ? (
-                  <ModelViewer
-                    url={p.glb}
-                    modelScale={p.modelScale}
-                    cameraZ={p.cameraZ}
-                    offsetX={p.offsetX ?? 0}
-                    offsetY={p.offsetY ?? 0}
-                    exposure={p.exposure ?? 1}
-                    envIntensity={p.envIntensity ?? 1}
-                    ambientIntensity={p.ambientIntensity ?? 1.2}
-                    lightColor={p.lightColor ?? '#ffffff'}
-                    accentLightColor={p.accentLightColor ?? '#5ee7b0'}
-                  />
-                ) : p.src ? (
-                  <img className="project-media" src={p.src} alt={p.alt} />
-                ) : null}
+          {projects.map((p, i) => {
+            const cardClass = `project-card reveal${p.featured ? ' featured' : ''}${p.type === 'model' ? ' model-card' : ''}${p.portrait ? ' portrait' : ''}${
+              i % 3 === 1 ? ' reveal-delay-1' : i % 3 === 2 ? ' reveal-delay-2' : ''
+            }${p.link ? ' clickable' : ''}`;
+
+            const inner = (
+              <>
+                <div className={`project-media-wrap${p.type === 'model' ? ' model-media-wrap' : ''}`}>
+                  {p.type === 'video' ? (
+                    <video
+                      className="project-media"
+                      autoPlay muted loop playsInline
+                      src={p.src}
+                      aria-label={p.alt}
+                    />
+                  ) : p.type === 'model' ? (
+                    <ModelViewer
+                      url={p.glb}
+                      modelScale={p.modelScale}
+                      cameraZ={p.cameraZ}
+                      offsetX={p.offsetX ?? 0}
+                      offsetY={p.offsetY ?? 0}
+                      roughness={p.roughness ?? 1}
+                      metalness={p.metalness ?? 0}
+                      envPreset={p.envPreset ?? 'apartment'}
+                      envIntensity={p.envIntensity ?? 2.5}
+                      exposure={p.exposure ?? 1.0}
+                    />
+                  ) : p.src ? (
+                    <img className="project-media" src={p.src} alt={p.alt} />
+                  ) : null}
+                </div>
+                <div className="project-body">
+                  <p className="project-tag">{p.tag}</p>
+                  <h3 className="project-title">
+                    {p.title}
+                    {p.link && (
+                      <span className="project-link-icon" aria-hidden="true">↗</span>
+                    )}
+                  </h3>
+                  <p className="project-desc">{p.desc}</p>
+                </div>
+              </>
+            );
+
+            if (p.type === 'model' && p.link) {
+              return (
+                <div key={p.id + i} className={cardClass}>
+                  <div className="project-media-wrap model-media-wrap">
+                    <ModelViewer
+                      url={p.glb}
+                      modelScale={p.modelScale}
+                      cameraZ={p.cameraZ}
+                      offsetX={p.offsetX ?? 0}
+                      offsetY={p.offsetY ?? 0}
+                      roughness={p.roughness ?? 1}
+                      metalness={p.metalness ?? 0}
+                      envPreset={p.envPreset ?? 'apartment'}
+                      envIntensity={p.envIntensity ?? 2.5}
+                      exposure={p.exposure ?? 1.0}
+                    />
+                  </div>
+                  <a
+                    href={p.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="project-body project-body-link"
+                  >
+                    <p className="project-tag">{p.tag}</p>
+                    <h3 className="project-title">
+                      {p.title}
+                      <span className="project-link-icon" aria-hidden="true">↗</span>
+                    </h3>
+                    <p className="project-desc">{p.desc}</p>
+                  </a>
+                </div>
+              );
+            }
+
+            return p.link ? (
+              <a
+                key={p.id + i}
+                className={cardClass}
+                href={p.link}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {inner}
+              </a>
+            ) : (
+              <div key={p.id + i} className={cardClass}>
+                {inner}
               </div>
-              <div className="project-body">
-                <p className="project-tag">{p.tag}</p>
-                <h3 className="project-title">{p.title}</h3>
-                <p className="project-desc">{p.desc}</p>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
