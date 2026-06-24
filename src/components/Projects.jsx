@@ -54,7 +54,7 @@ const projects = [
     portrait: true,
     src: ivoryImg,
     alt: 'Ivory project',
-     link: 'https://expo.dev/accounts/samyboiryota/projects/ivory-app/builds/67a6c4ab-f472-4c8d-8c04-56eed1d84b2b',
+     link: 'https://expo.dev/accounts/samyboiryota/projects/ivory-app/builds/2bc094a7-bb9b-45d7-b459-b555829150fc',
   },
   {
     id: 'calculator',
